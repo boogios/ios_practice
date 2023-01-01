@@ -10,6 +10,7 @@ import UIKit
 class ReminderListViewController: UICollectionViewController {
     
     typealias Datasource = UICollectionViewDiffableDataSource<Int, String>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
     
     var dataSource: Datasource! // Use implicitly unwrapped optionals only when you know that the optional will have a value.
 
@@ -32,6 +33,12 @@ class ReminderListViewController: UICollectionViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
         
+        var snapshot = Snapshot()
+        snapshot.appendSections([0])
+        snapshot.appendItems(Reminder.sampleData.map {$0.title}) // Reminder의 title 정보들만 포함
+        dataSource.apply(snapshot) // Applying the snapshot reflects the changes in the user interface.
+        
+        collectionView.dataSource = dataSource // Assign the data source to the collection view.
     }
     
     private func listLayout() -> UICollectionViewCompositionalLayout {
