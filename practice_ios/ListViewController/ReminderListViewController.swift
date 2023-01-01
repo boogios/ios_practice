@@ -9,10 +9,7 @@ import UIKit
 
 class ReminderListViewController: UICollectionViewController {
     
-    typealias Datasource = UICollectionViewDiffableDataSource<Int, String>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
-    
-    var dataSource: Datasource! // Use implicitly unwrapped optionals only when you know that the optional will have a value.
+    var dataSource: DataSource! // Use implicitly unwrapped optionals only when you know that the optional will have a value.
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,15 +17,9 @@ class ReminderListViewController: UICollectionViewController {
         let listLayout = listLayout()
         collectionView.collectionViewLayout = listLayout
         
-        let cellRegistration = UICollectionView.CellRegistration {
-            (cell: UICollectionViewListCell, indexPath: IndexPath, itemIdentifier: String) in
-            let reminder = Reminder.sampleData[indexPath.item]
-            var contentConfiguration = cell.defaultContentConfiguration()
-            contentConfiguration.text = reminder.title
-            cell.contentConfiguration = contentConfiguration
-        }
+        let cellRegistration = UICollectionView.CellRegistration(handler: cellRegistraionHandler) // handler parameter로 변경
         
-        dataSource = Datasource(collectionView: collectionView) {
+        dataSource = DataSource(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: String) in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
